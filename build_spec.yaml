@@ -6,7 +6,7 @@ failImmediatelyOnError: true
 
 steps:
   - type: Command
-    name: Build without tests
+    name: Install Dependencies
     command: |
       chmod +x mvnw
       ./mvnw clean package -DskipTests
