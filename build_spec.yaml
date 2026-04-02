@@ -6,15 +6,20 @@ failImmediatelyOnError: true
 
 steps:
   - type: Command
-    name: Install Dependencies
+    name: Build without tests
     command: |
       chmod +x mvnw
       ./mvnw clean package -DskipTests
 
   - type: Command
-    name: Regression Testing
+    name: Run Tests
     command: |
       ./mvnw test
+
+  - type: Command
+    name: Verify Output
+    command: |
+      ls -lah target
 
 outputArtifacts:
   - name: loginform-jar
