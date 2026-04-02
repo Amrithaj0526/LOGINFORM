@@ -6,22 +6,34 @@ failImmediatelyOnError: true
 
 steps:
   - type: Command
-    name: Setup Environment
+    name: Debug
     command: |
-      echo "Checking Java & Maven..."
-      java -version || echo "Java missing"
-      mvn -version || echo "Maven missing"
+      echo "Checking commands..."
+      which java || echo "Java not found"
+      which mvn || echo "Maven not found"
+      ls -l
 
   - type: Command
-    name: Install Maven (if missing)
+    name: Build
     command: |
-      apt-get update
-      apt-get install -y maven
+      if [ -f ./mvnw ]; then
+        echo "Using Maven Wrapper"
+        chmod +x mvnw
+        ./mvnw -B clean package
+      else
+        echo "mvnw not found, trying mvn"
+        mvn -B clean package
+      fi
 
   - type: Command
-    name: Build Project
+    name: Verify
     command: |
-      if [ -f mvnw ]; then
+      ls -lah target
+
+outputArtifacts:
+  - name: loginform-jar
+    type: BINARY
+    location: target/*.jar
         chmod +x mvnw
         ./mvnw -B clean package
       else
