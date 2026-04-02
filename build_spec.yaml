@@ -6,7 +6,20 @@ failImmediatelyOnError: true
 
 steps:
   - type: Command
-    name: Build, test, and package
+    name: Setup Environment
+    command: |
+      echo "Checking Java & Maven..."
+      java -version || echo "Java missing"
+      mvn -version || echo "Maven missing"
+
+  - type: Command
+    name: Install Maven (if missing)
+    command: |
+      apt-get update
+      apt-get install -y maven
+
+  - type: Command
+    name: Build Project
     command: |
       if [ -f mvnw ]; then
         chmod +x mvnw
@@ -14,6 +27,10 @@ steps:
       else
         mvn -B clean package
       fi
+
+  - type: Command
+    name: Check Output
+    command: |
       ls -lah target
 
 outputArtifacts:
