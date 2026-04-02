@@ -6,44 +6,23 @@ failImmediatelyOnError: true
 
 steps:
   - type: Command
-    name: Debug
-    command: |
-      echo "Checking commands..."
-      which java || echo "Java not found"
-      which mvn || echo "Maven not found"
-      ls -l
-
-  - type: Command
-    name: Build
-    command: |
-      if [ -f ./mvnw ]; then
-        echo "Using Maven Wrapper"
+    name: Build without tests
+    commandSpec:
+      script: |
         chmod +x mvnw
-        ./mvnw -B clean package
-      else
-        echo "mvnw not found, trying mvn"
-        mvn -B clean package
-      fi
+        ./mvnw clean install -DskipTests
 
   - type: Command
-    name: Verify
-    command: |
-      ls -lah target
-
-outputArtifacts:
-  - name: loginform-jar
-    type: BINARY
-    location: target/*.jar
-        chmod +x mvnw
-        ./mvnw -B clean package
-      else
-        mvn -B clean package
-      fi
+    name: Regression Testing
+    commandSpec:
+      script: |
+        ./mvnw test
 
   - type: Command
-    name: Check Output
-    command: |
-      ls -lah target
+    name: Package
+    commandSpec:
+      script: |
+        ./mvnw package
 
 outputArtifacts:
   - name: loginform-jar
