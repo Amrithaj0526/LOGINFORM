@@ -1,26 +1,11 @@
 version: 0.1
 component: build
-timeoutInSeconds: 3600
-shell: bash
-failImmediatelyOnError: true
 
 steps:
   - type: Command
-    name: Build without tests
+    name: Run Regression Test
     command: |
-      chmod +x mvnw
-      ./mvnw clean package -DskipTests
-
-  - type: Command
-    name: Run Tests
-    command: |
-      ./mvnw test
-
-  - type: Command
-    name: Verify Output
-    command: |
-      ls -lah target
-
+      mvn clean test
 outputArtifacts:
   - name: loginform-jar
     type: BINARY
